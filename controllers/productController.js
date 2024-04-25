@@ -3,10 +3,13 @@ const productModel = require("../models/productModel");
 module.exports = {
   createProduct: async (req, res) => {
     const body = req.body;
+    // thiếu id category
+    // kiểm tra category có tồn tại
+
     const newProduct = await productModel.create(body);
     return res.status(201).json(newProduct);
   },
-  getProduct: async (req, res) => {
+  getProducts: async (req, res) => {
     const category_id = req.query.category_id;
     const body_query = {};
     if (category_id) {

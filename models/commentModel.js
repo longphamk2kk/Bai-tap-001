@@ -18,11 +18,11 @@ const commentSchema = new mongoose.Schema({
     default: Date.now,
   },
   accountId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.SchemaTypes.ObjectId,
     ref: "account",
   },
   productId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.SchemaTypes.ObjectId,
     ref: "product",
   },
 });

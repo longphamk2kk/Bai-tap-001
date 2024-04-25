@@ -3,6 +3,7 @@ const categoryModel = require("../models/categoryModel");
 module.exports = {
   createCategory: async (req, res) => {
     const body = req.body;
+    //validation https://www.npmjs.com/package/joi
     const newCategory = await categoryModel.create(body);
     return res.status(201).json(newCategory);
   },

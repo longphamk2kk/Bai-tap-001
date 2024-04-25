@@ -1,6 +1,7 @@
 const accountModel = require("../models/accountModel");
 
 module.exports = {
+  //thiết jwt
   register: async (req, res) => {
     const body = req.body;
     const newAccount = await accountModel.create(body);

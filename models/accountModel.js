@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcryptjs = require("bcryptjs");
 
 const accountSchema = mongoose.Schema(
   {
@@ -25,7 +26,22 @@ const accountSchema = mongoose.Schema(
       default: "user",
     },
   },
-  { timestamps: true }
+  { 
+    versionKey: false,
+    timestamps: true
+  }
 );
+
+accountSchema.pre("save", function (next) {
+  const account = this;
+  if (account.password){
+    account.password = bcryptjs.hashSync(account.password, 10);
+  }
+  next();
+});
+
+//set("toJSON") xóa mk
+//pre("findOneAndUpdate")
+//pre("findByIdAndUpdate")
 
 module.exports = mongoose.model("account", accountSchema);
