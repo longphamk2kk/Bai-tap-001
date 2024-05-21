@@ -1,4 +1,5 @@
 const accountModel = require("../models/accountModel");
+const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
 const ErrorRespondse = require("../helper/ErrorRespondse");
 
@@ -29,7 +30,7 @@ module.exports = {
     return res.status(200).json({
       statusCode: 200,
       message: " Dang nhap thanh cong",
-      data: account,
+      data: { account, token },
     });
   },
   getAllAccount: async (req, res) => {
