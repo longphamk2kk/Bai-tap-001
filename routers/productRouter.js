@@ -7,9 +7,16 @@ const {
   updateProduct,
   deleteProduct,
 } = require("../controllers/productController");
+const asyncMiddleware = require("../middlewares/asyncMiddleware");
 
-router.route("/").post(createProduct).get(getProduct);
+router
+  .route("/")
+  .post(asyncMiddleware(createProduct))
+  .get(asyncMiddleware(getProduct));
 
-router.route("/:id").patch(updateProduct).delete(deleteProduct);
+router
+  .route("/:id")
+  .patch(asyncMiddleware(updateProduct))
+  .delete(asyncMiddleware(deleteProduct));
 
 module.exports = router;

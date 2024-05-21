@@ -7,8 +7,15 @@ const {
   updateCategory,
   deleteCategory,
 } = require("../controllers/categoryController");
+const asyncMiddleware = require("../middlewares/asyncMiddleware");
 
-router.route("/").post(createCategory).get(getCategories);
+router
+  .route("/")
+  .post(asyncMiddleware(createCategory))
+  .get(asyncMiddleware(getCategories));
 
-router.route("/:id").patch(updateCategory).delete(deleteCategory);
+router
+  .route("/:id")
+  .patch(asyncMiddleware(updateCategory))
+  .delete(asyncMiddleware(deleteCategory));
 module.exports = router;

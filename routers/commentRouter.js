@@ -7,11 +7,15 @@ const {
   updateComment,
   deleteComment,
 } = require("../controllers/commentController");
+const asyncMiddleware = require("../middlewares/asyncMiddleware");
 
-router.route("/").post(createComment);
+router.route("/").post(asyncMiddleware(createComment));
 
-router.route("/:id").patch(updateComment).delete(deleteComment);
+router
+  .route("/:id")
+  .patch(asyncMiddleware(updateComment))
+  .delete(asyncMiddleware(deleteComment));
 
-router.route("/:productId").get(getComment);
+router.route("/:productId").get(asyncMiddleware(getComment));
 
 module.exports = router;

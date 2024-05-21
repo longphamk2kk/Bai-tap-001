@@ -7,8 +7,10 @@ const {
   getAllAccount,
 } = require("../controllers/accountController");
 
-router.route("/").get(getAllAccount);
-router.route("/login").post(login);
-router.route("/register").post(register);
+const asyncMiddleware = require("../middlewares/asyncMiddleware");
+
+router.route("/").get(asyncMiddleware(getAllAccount));
+router.route("/login").post(asyncMiddleware(login));
+router.route("/register").post(asyncMiddleware(register));
 
 module.exports = router;
