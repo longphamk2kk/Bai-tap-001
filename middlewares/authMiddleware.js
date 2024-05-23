@@ -1,34 +1,29 @@
 const jwt = require("jsonwebtoken");
 const accountModel = require("../models/accountModel");
+const ErrorResponse = require("../helper/ErrorResponse");
 
-const authenticate = async (req, res, next) => {
-  const token = req.header("Authorization").replace("Bearer ", "");
+const authMiddleware = async (req, res, next) => {
+  const {authorization} = req.headers;
+
+  if (!authorization || !authorization.startsWith("Bearer ")){
+    throw new ErrorResponse(401, "unauthorize");
+  } 
+
+  const token = authorization.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, "secretKey"); // sử dụng khóa bí mật của bạn
     const account = await accountModel.findById(decoded.id);
 
     if (!account) {
-      throw new Error();
+      throw new ErrorResponse(401, "invalid account");
     }
 
     req.account = account;
     next();
   } catch (error) {
-    res.status(401).send({ error: "Vui lòng xác thực" });
+    throw new ErrorResponse(401, "unauthorize");
   }
-};
+}; 
 
-const authorizeAdmin = (req, res, next) => {
-  if (req.account.role !== "admin") {
-    return res
-      .status(403)
-      .send({ error: "Bạn không có quyền thực hiện thao tác này" });
-  }
-  next();
-};
-
-module.exports = {
-  authenticate,
-  authorizeAdmin,
-};
+module.exports = authMiddleware;

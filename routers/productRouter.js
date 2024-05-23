@@ -8,19 +8,17 @@ const {
   deleteProduct,
 } = require("../controllers/productController");
 const asyncMiddleware = require("../middlewares/asyncMiddleware");
-const {
-  authenticate,
-  authorizeAdmin,
-} = require("../middlewares/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
+const roleMiddleware = require("../middlewares/roleMiddleware");
 
 router
   .route("/")
-  .post(authenticate, authorizeAdmin, asyncMiddleware(createProduct))
+  .post(asyncMiddleware(authMiddleware), roleMiddleware("admin"), asyncMiddleware(createProduct))
   .get(asyncMiddleware(getProduct));
 
 router
   .route("/:id")
-  .patch(authenticate, authorizeAdmin, asyncMiddleware(updateProduct))
-  .delete(authenticate, authorizeAdmin, asyncMiddleware(deleteProduct));
+  .patch(asyncMiddleware(authMiddleware), roleMiddleware("admin"), asyncMiddleware(updateProduct))
+  .delete(asyncMiddleware(authMiddleware), roleMiddleware("admin"), asyncMiddleware(deleteProduct));
 
 module.exports = router;
