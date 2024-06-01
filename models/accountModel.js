@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcryptjs = require("bcryptjs");
 
 const accountSchema = mongoose.Schema(
   {
@@ -25,8 +26,8 @@ const accountSchema = mongoose.Schema(
       default: "user",
     },
   },
-  { timestamps: true },
   {
+    timestamps: true,
     versionKey: false,
   }
 );

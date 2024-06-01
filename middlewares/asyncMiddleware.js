@@ -1,7 +1,7 @@
 function asyncMiddleware(fn) {
   return async (req, res, next) => {
     try {
-      await fn(req, rex, next);
+      await fn(req, res, next);
     } catch (error) {
       next(error);
     }

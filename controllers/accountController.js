@@ -1,7 +1,7 @@
 const accountModel = require("../models/accountModel");
 const jwt = require("jsonwebtoken");
 const bcryptjs = require("bcryptjs");
-const ErrorRespondse = require("../helper/ErrorRespondse");
+const ErrorResponse = require("../helper/ErrorResponse");
 
 module.exports = {
   register: async (req, res) => {
@@ -13,7 +13,7 @@ module.exports = {
     const { username, password } = req.body;
     const account = await accountModel.findOne({ username });
     if (!account) {
-      throw new ErrorRespondse(400, "tk hoac mk ko dung");
+      throw new ErrorResponse(400, "tk hoac mk ko dung");
     }
     const checkPass = bcryptjs.compareSync(password, account.password);
     if (!checkPass) {
@@ -21,20 +21,34 @@ module.exports = {
       //   statusCode: 400,
       //   message: "tai khoan hoac mat khau khong dung",
       // });
-      throw new ErrorRespondse(400, "tk hoac mk ko dung");
+      throw new ErrorResponse(400, "tk hoac mk ko dung");
     }
-    const token = jwt.sign({ id: account._id }, "secretKey", {
+
+    const payload = { id: account._id, role: account.role };
+
+    const token = jwt.sign(payload, "secretKey", {
       expiresIn: "1h",
     });
 
     return res.status(200).json({
       statusCode: 200,
       message: " Dang nhap thanh cong",
-      data: { account, token },
+      data: { ...payload, token },
     });
   },
   getAllAccount: async (req, res) => {
     const accounts = await accountModel.find();
     return res.status(200).json(accounts);
+  },
+  deleteAccount: async (req, res) => {
+    const { id } = req.params;
+    const account = await accountModel.findByIdAndDelete(id);
+    if (!account) {
+      throw new ErrorResponse(404, "khong tim thay Account");
+    }
+    return res.status(200).json({
+      statusCode: 200,
+      message: "da xoa tai khoan",
+    });
   },
 };
